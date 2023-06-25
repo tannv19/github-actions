@@ -11,10 +11,11 @@ on:
 
 jobs:
   build-java:
-    runs-on: ${{ matrix.os }}
-    strategy:
-      matrix:
-        os: [ubuntu-latest, windows-latest, macOS-latest]
+    runs-on: ubuntu-latest
+    # runs-on: ${{ matrix.os }}
+    # strategy:
+    #   matrix:
+    #     os: [ubuntu-latest, windows-latest, macOS-latest]
 
     steps:
       - uses: actions/checkout@v2
@@ -29,3 +30,12 @@ jobs:
 
       - name: Build with Gradle
         run: ./gradlew build
+
+      - name: Build and Push Docker Image
+        uses: mr-smithers-excellent/docker-build-push@v1
+        with:
+          image: tannvdev19/spring-boot-docker
+          registry: docker.io
+          tags: latest
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_PASSWORD }}
